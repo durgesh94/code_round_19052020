@@ -4,13 +4,15 @@ var axios = require('axios');
 
 const Weather = require("../models/Weather");
 
+const isPrime = require('../utilities/Prime').isPrime;
+
 const URL = 'https://samples.openweathermap.org/data/2.5/weather?id=2172796&appid=439d4b804bc8187953eb36d2a8c26a02';
 
 //** GET */
 router.get('/', (req, res) => {
     try {
         getDataFromAPI()
-            .then(findPrimeDate)
+            .then(isPrime)
             .then(saveData)
             .then(resp => {
                 if (resp.data.data.isPrime)
@@ -23,7 +25,7 @@ router.get('/', (req, res) => {
     }
 });
 
-getDataFromAPI = () => {
+const getDataFromAPI = () => {
     return new Promise((resolve, reject) => {
         axios.get(URL).then(response => {
             resolve(response.data);
@@ -31,26 +33,7 @@ getDataFromAPI = () => {
     });
 }
 
-findPrimeDate = (data) => {
-    return new Promise((resolve, reject) => {
-        const date = new Date(data.dt);
-        const day = date.getDate();
-        var i, flag = true;
-
-        for (i = 2; i <= day - 1; i++)
-            if (day % i == 0) {
-                flag = false;
-                break;
-            }
-
-        if (flag == true)
-            resolve({ isPrime: true, data: data });
-        else
-            resolve({ isPrime: false, data: 'Date is not prime so no data' });
-    })
-}
-
-saveData = async (data) => {
+const saveData = async (data) => {
     return new Promise(async (resolve, reject) => {
         const weather = new Weather({
             data: data.isPrime ? data.data : null,
@@ -64,6 +47,5 @@ saveData = async (data) => {
         }
     });
 }
-
 
 module.exports = router;

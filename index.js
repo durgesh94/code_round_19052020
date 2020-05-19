@@ -19,7 +19,9 @@ app.use('/api/weatherApproach2', weatherApproach2Routes);
 
 //** Routes */
 app.get('/', (req, res) => {
-    res.send(`RESTful API is running...\n1. http://localhost:5000/api/weather \n2. http://localhost:5000/api/weatherApproach2`);
+    res.send(`RESTful API is running...
+    \n1. http://localhost:5000/api/weather 
+    \n2. http://localhost:5000/api/weatherApproach2`);
 });
 
 //** Connect to DB */
